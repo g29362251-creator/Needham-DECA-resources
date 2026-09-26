@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Needham DECA — Resource Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-900:#0A2472;
+    --blue-700:#12379C;
+    --blue-600:#1656D6;
+    --blue-500:#2E6BFF;
+    --blue-tint:#EAF0FF;
+    --gold:#E3A62F;
+    --gold-deep:#B9821E;
+    --bg:#F4F6FB;
+    --card:#FFFFFF;
+    --ink:#101323;
+    --ink-soft:#5B6178;
+    --rule:#E4E8F2;
+    box-sizing:border-box;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px));}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    height:100%;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B0F1A; --card:#141A2A; --ink:#EDEFF7; --ink-soft:#9BA2BC;
+      --rule:#232B40; --blue-tint:#132247;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B0F1A; --card:#141A2A; --ink:#EDEFF7; --ink-soft:#9BA2BC;
+    --rule:#232B40; --blue-tint:#132247;
+  }
+
+  .appbar{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(135deg,var(--blue-900),var(--blue-600));
+    padding:calc(.85rem + env(safe-area-inset-top,0px)) 1.1rem .85rem;
+    display:flex; align-items:center; gap:.6rem;
+    box-shadow:0 2px 14px rgba(10,36,114,.18);
+  }
+  .appbar .mark{
+    width:34px;height:34px;border-radius:9px;
+    background:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:var(--blue-900);font-family:'Manrope',sans-serif;
+    font-size:1.05rem;flex:none;
+  }
+  .appbar-text{min-width:0;}
+  .appbar-title{
+    color:#fff; font-family:'Manrope',sans-serif; font-weight:800;
+    font-size:1.05rem; margin:0; line-height:1.1;
+  }
+  .appbar-sub{
+    color:#C7D6FF; font-size:.74rem; margin:.1rem 0 0; font-weight:500;
+  }
+
+  main{
+    max-width:640px;margin:0 auto;
+    padding:1.1rem 1rem calc(96px + env(safe-area-inset-bottom,0px));
+  }
+  .panel{display:none;}
+  .panel.active{display:block; animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);} to{opacity:1;transform:none;}}
+
+  .cluster-head{
+    display:flex; align-items:center; gap:.6rem; margin-bottom:1rem;
+  }
+  .cluster-head .emoji{font-size:1.6rem;line-height:1;}
+  .cluster-head h1{
+    font-family:'Manrope',sans-serif; font-weight:800;
+    font-size:1.3rem; margin:0; color:var(--ink);
+  }
+
+  .section-label{
+    font-family:'Manrope',sans-serif; font-weight:700;
+    font-size:.78rem; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--blue-600); margin:1.4rem 0 .6rem;
+  }
+  .section-label:first-of-type{margin-top:0;}
+
+  .info-box{
+    background:var(--blue-tint);
+    border:1px solid var(--blue-500);
+    border-radius:14px;
+    padding:.8rem .95rem;
+    font-size:.84rem;
+    line-height:1.45;
+    color:var(--ink);
+    margin-bottom:1.1rem;
+  }
+  .info-box b{color:var(--blue-700);}
+  :root[data-theme="dark"] .info-box b, @media (prefers-color-scheme: dark){ .info-box b{color:#8FB2FF;} }
+  .info-box .tagex{
+    display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;
+    color:#fff;background:var(--gold-deep);border-radius:5px;padding:.05rem .4rem;
+    margin:0 .1rem;
+  }
+
+  .test-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.4rem;
+  }
+  .test-link{
+    display:flex; align-items:center;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:14px;
+    padding:.75rem .8rem;
+    color:var(--ink);
+    text-decoration:none;
+    font-size:.83rem;
+    font-weight:600;
+    line-height:1.3;
+    box-shadow:0 1px 2px rgba(16,19,35,.04);
+  }
+  .test-link:active{transform:scale(.98);}
+  .test-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  .rp-card{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:16px;
+    padding:1rem 1.05rem 1.05rem;
+    margin-bottom:.75rem;
+    box-shadow:0 1px 3px rgba(16,19,35,.05);
+  }
+  .rp-title{
+    font-family:'Manrope',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    margin:0 0 .25rem;
+    color:var(--ink);
+  }
+  .rp-area{
+    font-size:.76rem;
+    color:var(--gold-deep);
+    font-weight:700;
+    margin:0 0 .7rem;
+  }
+  .rp-links{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem;}
+  .rp-links a{
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    background:var(--blue-tint);
+    border:1px solid transparent;
+    border-radius:10px;
+    padding:.4rem .65rem;
+    font-size:.78rem;
+    font-weight:600;
+    color:var(--blue-700);
+    text-decoration:none;
+  }
+  :root[data-theme="dark"] .rp-links a{color:#9FC0FF;}
+  .rp-links a:active{transform:scale(.97);}
+  .rp-links a span.tag{
+    font-size:.65rem;
+    color:#fff;
+    background:var(--gold-deep);
+    border-radius:4px;
+    padding:.05rem .38rem;
+    font-weight:700;
+  }
+  .empty-note{color:var(--ink-soft);font-size:.85rem;font-style:italic;}
+
+  /* Home panel */
+  .hero{
+    background:linear-gradient(150deg,var(--blue-900),var(--blue-600));
+    border-radius:20px;
+    padding:1.4rem 1.3rem 1.5rem;
+    color:#fff;
+    margin-bottom:1.3rem;
+  }
+  .hero .eyebrow{
+    color:var(--gold); font-weight:800; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.08em; margin:0 0 .35rem;
+  }
+  .hero h1{
+    font-family:'Manrope',sans-serif; font-weight:800;
+    font-size:1.45rem; margin:0 0 .55rem; line-height:1.15;
+  }
+  .hero p{
+    color:#D7E0FF; font-size:.88rem; line-height:1.5; margin:0;
+  }
+  .howto{
+    display:flex; flex-direction:column; gap:.5rem;
+    margin-bottom:1.5rem;
+  }
+  .howto .step{
+    display:flex; gap:.7rem; align-items:flex-start;
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:12px; padding:.7rem .8rem;
+  }
+  .howto .num{
+    flex:none; width:24px; height:24px; border-radius:50%;
+    background:var(--gold); color:var(--blue-900);
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:.78rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .howto .txt{font-size:.83rem; line-height:1.4; color:var(--ink);}
+  .howto .txt b{color:var(--blue-700);}
+
+  .cluster-cards{display:flex; flex-direction:column; gap:.65rem;}
+  .cluster-card{
+    display:flex; align-items:center; gap:.8rem;
+    background:var(--card); border:1px solid var(--rule);
+    border-radius:16px; padding:.85rem .95rem;
+    text-align:left; cursor:pointer;
+    box-shadow:0 1px 3px rgba(16,19,35,.05);
+  }
+  .cluster-card:active{transform:scale(.98);}
+  .cluster-card .cc-emoji{
+    flex:none; font-size:1.5rem;
+    width:42px; height:42px; border-radius:12px;
+    background:var(--blue-tint);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cluster-card .cc-body{min-width:0;}
+  .cluster-card .cc-title{
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:.94rem;
+    margin:0 0 .15rem; color:var(--ink);
+  }
+  .cluster-card .cc-desc{
+    font-size:.78rem; color:var(--ink-soft); line-height:1.35; margin:0;
+  }
+  .cluster-card .cc-arrow{
+    flex:none; color:var(--blue-500); font-size:1.1rem; font-weight:700;
+  }
+
+  nav.tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    background:var(--card);
+    border-top:1px solid var(--rule);
+    padding:.4rem .3rem calc(.4rem + env(safe-area-inset-bottom,0px));
+    display:flex;
+    box-shadow:0 -2px 14px rgba(16,19,35,.06);
+    overflow-x:auto;
+  }
+  nav.tabbar button{
+    flex:1; min-width:56px;
+    display:flex; flex-direction:column; align-items:center; gap:.18rem;
+    background:none; border:none;
+    padding:.3rem .1rem;
+    font-family:'Inter',sans-serif;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  nav.tabbar button .ic{font-size:1.25rem;line-height:1;}
+  nav.tabbar button .lbl{
+    font-size:.6rem; font-weight:700;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;
+  }
+  nav.tabbar button[aria-selected="true"]{color:var(--blue-600);}
+  nav.tabbar button[aria-selected="true"] .lbl{color:var(--blue-600);}
+  nav.tabbar button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;border-radius:8px;}
+</style>
+</head>
+<body>
+<div class="appbar">
+  <div class="mark">D</div>
+  <div class="appbar-text">
+    <p class="appbar-title">Needham DECA</p>
+    <p class="appbar-sub" id="appbar-sub">Resource Hub</p>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>
+const DATA = [{"id": "core", "name": "Business Administration Core", "tests": [["Exam Blueprint", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6a3c69fcf9672174167a66c9_HS_Blueprint.pdf"], ["BA Core \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ed502b052b24e81259ae_BA%20Core-District%20Exam.pdf"], ["DECA Quizzer \u2013 Core", "https://www.decaquizzer.com/core"], ["NoviDECA \u2013 BA Core Exam", "https://novideca.weebly.com/business-administration-core-exam.html"]], "roleplays": []}, {"id": "marketing", "name": "Marketing", "tests": [["Exam Blueprint", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6a3c69fcf9672174167a66c9_HS_Blueprint.pdf"], ["HS Marketing Cluster Sample Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65df42a3765c3c9af7ef6459_HS_Marketing_Cluster_Sample_Exam_24.pdf"], ["Marketing \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1eeab6e1e15a9025b6321_Marketing-District%20Exam.pdf"], ["Quizlet Flashcards", "https://quizlet.com/180795748/flashcards?funnelUUID=4b143856-77a6-4761-a8c5-94d43ade3c49"], ["DECA Quizzer", "https://www.decaquizzer.com/"], ["Teach DECA \u2013 Marketing Sample Exam", "https://teachdeca.org/wp-content/uploads/2019/08/Teach_DECA_Marketing_Sample_Exam.pdf"], ["NoviDECA \u2013 15 Marketing Practice Exams", "https://www.novideca.org/practice-exams/mkt"]], "roleplays": [["Principles of Marketing", "Customer Relations", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ed96df265ed43108d33c_DECA_PMK_2026_District_Event.pdf", "Customer Relations"], ["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1d991fcf029f05b70642d_DECA_PMK_2025_District_Event.pdf", "Customer Relations"], ["2022 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a29960fcf1364b773343f_DECA_PMK_2022_District_Event.pdf", "Customer Relations"]]], ["Apparel and Accessories Marketing Series", "Scenario 1: Product/Service Management \u00b7 Scenario 2: Customer Relations", [["2025 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c21871861847088f668db2_DECA_AAM_2025_District_Event_2.pdf", "Product/Service Management"], ["2024 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcd8f51785ad8b1c127de6_DECA_AAM_2024_District_Event_1.pdf", "Customer Relations"], ["2024 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcd9229386043358902d6c_DECA_AAM_2024_District_Event_2.pdf", null], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd9760f8ab081cb87c32e_Deca_AAM_%202023_District_Event_1_CR.pdf", "Product/Service Management"], ["2022 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63992fcafb075b480fe22cbf_DECA_AAM_2022_District_Event_2.pdf", "Customer Relations"]]], ["Automotive Services Marketing Series", "Scenario 1: Economics \u00b7 Scenario 2: Customer Relations", [["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1dbd6fcf029f05b72d9be_DECA_ASM_2025_District_Event_1.pdf", "Customer Relations"], ["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1fba9ca47e860f8706be7_DECA_ASM_2026_District_Event_2.pdf", null], ["2024 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dce34a35afbeca4a0257e7_DECA_ASM_2024_District_Event_1.pdf", "Economics"], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd47fbeb0e42007ff0620_DECA_ASM_2023_District_Event_1_CR.pdf", "Customer Relations"], ["2019 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b7908e9be866420e65f43_DECA_ASM_2019_District_Event_1.pdf", "Economics"]]], ["Business Services Marketing Series", "Scenario 1: Marketing-Information Management \u00b7 Scenario 2: Operations", [["2026 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1efc9f57b826a8b7bd621_DECA_BSM_2026_District_Event_1.pdf", null], ["2022 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b7006b5c8d746af3a13c3_DECA_BSM_2022_District_Event_1.pdf", "Marketing-Information Management"], ["2017 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b6cd6e5884291d1853126_DECA_BSM_2017_District_Event_1.pdf", null]]], ["Food Marketing Series", "Scenario 1: Economics \u00b7 Scenario 2: Promotion", [["2025 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c221c414b044d4c0b1448d_DECA_FMS_2025_District_Event_2.pdf", "Economics"], ["2024 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcd8433711804489e62f4b_DECA_FMS_2024_District_Event_2.pdf", "Promotion"], ["2026 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1efe45930d812b34b88cb_DECA_FMS_2026_District_Event_1.pdf", null], ["2021 District Event 1 (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b646d55e1689f33d7b556_DECA_FMS_2021_District_Event_1_Virtual.pdf", "Economics"]]], ["Marketing Communications Series", "Scenario 1: Promotion", [["2026 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1eff84258eea9a2091001_DECA_MCS_2026_District_Event_1.pdf", "Promotion"], ["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ff09ed5bbdc94d091bca_DECA_MCS_2026_District_Event_2.pdf", "Promotion"], ["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1dd689b114f705fc2a947_DECA_MCS_2025_District_Event_1.pdf", "Promotion"], ["2024 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcb0655e623028e2a94110_DECA_MCS_2024_District_Event_1.pdf", "Promotion"]]], ["Retail Merchandising Series", "Scenario 1: Market Planning \u00b7 Scenario 2: Marketing", [["2025 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c223cc60417663995b2608_DECA_RMS_2025_District_Event_2.pdf", "Market Planning"], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd934ccfbaaf75687bb5e_DECA_RMS_2023_District_Event_1_CR.pdf", "Market Planning"], ["2018 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399fb0f5a7a93008e0ff76e_DECA_RMS_2018_District_Event_1.pdf", "Marketing"], ["2020 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a1096827c2c7fbc38b6a5_DECA_RMS_2020_District_Event_2.pdf", "Marketing"], ["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a2004ca7053ba8c51cdc95_DECA_RMS_2026_District_Event_2.pdf", null]]], ["Sports Entertainment Marketing Series", "Scenario 1: Market Planning \u00b7 Scenario 2: Promotion", [["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1de1c614619a49f07d8b5_DECA_SEM_2025_District_Event_1.pdf", "Promotion"], ["2024 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcabbe4cfc879200695b50_DECA_SEM_2024_District_Event_1.pdf", "Market Planning"], ["2021 District Event 1 (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399f95dc7549e72bf906421_DECA_SEM_2021_District_Event_1_Virtual.pdf", "Market Planning"], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcdb5ce8259247fb6c6256_DECA_SEM_2023_District_Event_1_CR.pdf", "Promotion"], ["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a200b3a7053ba8c51cfc4e_DECA_SEM_2026_District_Event_2.pdf", null]]], ["Buying and Merchandising Team Decision Making", "Economics", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1eec41ee69c1e4b67596c_DECA_BTDM_2026_District_Event.pdf", "Economics"], ["2024 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dca6ff82f4a53d97fd400b_DECA_BTDM_2024_District_Event.pdf", "Economics"], ["2023 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcdbdc1d261e84fb3e1150_DECA_BTDM_2023_District_Event_CR.pdf", "Economics"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b6c2797a2813f69658e28_DECA_BTDM_2021_District_Event_Virtual.pdf", "Economics"]]], ["Marketing Management Team Decision Making", "Marketing", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1eeb06e1e15a9025b63e9_DECA_MTDM_2026_District_Event.pdf", "Marketing"], ["2024 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dca5ba5b0339a24af2e7e4_DECA_MTDM_2024_District_Event.pdf", "Marketing"], ["2022 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a3460bd4bbd7b2bc835ad_DECA_MTDM_2022_District_Event.pdf", "Marketing"], ["2020 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a33e2d7b565405cc1ee05_DECA_MTDM_2020_District_Event.pdf", "Marketing"]]]]}, {"id": "bma", "name": "Business Mgmt & Administration", "tests": [["Exam Blueprint", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6a3c69fcf9672174167a66c9_HS_Blueprint.pdf"], ["DECA Quizzer", "https://www.decaquizzer.com/"], ["1235T BMA Practice Test", "https://assets-global.website-files.com/614e10e1200f163424ddb67c/616dbaacec20fc4394a64cbd_1235T_BMA_B21p.pdf"], ["BMA \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1edebf57b826a8b7b652a_BMA-District%20Exam.pdf"], ["NoviDECA \u2013 BA Core Practice Test Packet", "https://novideca.weebly.com/uploads/1/3/8/7/13870728/2018_practice_tests_business_admin_core.pdf"]], "roleplays": [["Principles of Business Management and Administration", "Professional Development", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ed33b265a7940d824efe_DECA_PBM_2026_District_Event.pdf", "Professional Development"], ["2020 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65e2171c949e727be7a8fb3e_DECA_PBM_2020_District_Event.pdf", "Professional Development"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65e21739e8e889bbff4217cc_DECA_PBM_2021_District_Event_Virtual.pdf", "Professional Development"], ["2023 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65e2177f1ffe398fdc4c9aa0_DECA_PBM_2023_District_Event_CR.pdf", "Professional Development"]]], ["Human Resources Management Series", "Scenario 1: Human Resource Management \u00b7 Scenario 2: Emotional Intelligence", [["2026 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ef041ee69c1e4b6761be_DECA_HRM_2026_District_Event_1.pdf", "Emotional Intelligence"], ["2025 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c22268b25be178719220a7_DECA_HRM_2025_District_Event_2.pdf", "Emotional Intelligence"], ["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1fe9145898e3d2f87b1a7_DECA_HRM_2026_District_Event_2.pdf", null], ["2024 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcd7b9dd23c9e404a1abb4_DECA_HRM_2024_District_Event_2.pdf", "Human Resource Management"], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd3888f1a356c7b48c141_DECA_HRM_2023_District_Event_1_CR.pdf", "Human Resource Management"]]], ["Business Law & Ethics Team Decision Making", "Operations", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1edf5d70a4e2b3dc50e8c_DECA_BLTDM_2026_District_Event.pdf", "Operations"], ["2024 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dca740622fb7dc57b6d180_DECA_BLTDM_2024_District_Event.pdf", "Operations"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b71dccf86475208e94f76_DECA_BLTDM_2021_District_Event_Virtual.pdf", "Operations"]]]]}, {"id": "entrepreneurship", "name": "Entrepreneurship", "tests": [["Exam Blueprint", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6a3c69fcf9672174167a66c9_HS_Blueprint.pdf"], ["NoviDECA \u2013 Entrepreneurship Practice Tests", "https://novideca.weebly.com/entrepreneurship-exam.html"], ["DECA Quizzer", "https://www.decaquizzer.com/"], ["COL 2019 Entrepreneurship Sample Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63c74a03a44923757ceb7391_COL_2019_Exam_Entrepreneurship_Sample-1.pdf"], ["Entrepreneurship \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ee11b265a7940d828561_Entre-District%20Exam.pdf"]], "roleplays": [["Principles of Entrepreneurship", "Financial Analysis", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ed7fcc15ece18fb1fa9a_DECA_PEN_2026_District_Event.pdf", "Financial Analysis"], ["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1d922c9f93d5716d0affe_DECA_PEN_2025_District_Event.pdf", "Financial Analysis"], ["Sample Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/66351527008c44d45e7bcf9a_DECA_PEN_Sample_Event.pdf", "Financial Analysis"]]], ["Entrepreneurship Series", "Scenario 1: Promotion \u00b7 Scenario 2: Entrepreneurship", [["2026 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1fd40ca54b50dc1cbb8a8_DECA_ENT_2026_District_Event_2.pdf", "Entrepreneurship"], ["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1dcb04763a03406c18472_DECA_ENT_2025_District_Event_1.pdf", "Entrepreneurship"], ["2026 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ef1fcc15ece18fb2471c_DECA_ENT_2026_District_Event_1.pdf", null], ["2019 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b6803e588425bac8216da_DECA_ENT_2019_District_Event_2.pdf", "Promotion"]]], ["Entrepreneurship Team Decision Making", "Market Planning", [["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ee1fcc15ece18fb20ab2_DECA_ETDM_2026_District_Event.pdf", "Market Planning"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b665f97a2810538629e2c_DECA_ETDM_2021_District_Event_Virtual.pdf", "Market Planning"], ["2020 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b65d8749439606cc3aee1_DECA_ETDM_2020_District_Event.pdf", "Market Planning"]]]]}, {"id": "finance", "name": "Finance", "tests": [["Exam Blueprint", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6a3c69fcf9672174167a66c9_HS_Blueprint.pdf"], ["NoviDECA \u2013 Finance Practice Exams", "https://www.novideca.org/practice-exams/fin"], ["DECA Quizzer", "https://www.decaquizzer.com/"], ["Finance \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ee4294aedcb145dba6c1_Finance-District%20Exam.pdf"], ["1255T Finance Practice Test", "https://assets-global.website-files.com/614e10e1200f163424ddb67c/62e04d0873542638d95a4507_1255T_FIN_B22.pdf"]], "roleplays": [["Principles of Finance", "Professional Development", [["2022 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a2d9f0fcf13129e777905_DECA_PFN_2022_District_Event.pdf", "Professional Development"], ["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1d9700d134dc43d1081a7_DECA_PFN_2025_District_Event.pdf", "Professional Development"], ["2019 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a2cc8aa264638f15489b9_DECA_PFN_2019_District_Event.pdf", "Professional Development"]]], ["Business Finance Series", "Scenario 1: Risk Management \u00b7 Scenario 2: Professional Development", [["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1dc22b8b3b7abe239e1ff_DECA_BFS_2025_District_Event_1.pdf", "Professional Development"], ["2018 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b75a06dd5125faf76421c_DECA_BFS_2018_District_Event_2.pdf", "Professional Development"], ["2020 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639b76d9aac61fd9594bbf20_DECA_BFS_2020_District_Event_2.pdf", null], ["2023 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd8967e511f5a77b956dd_DECA_BFS_2023_District_Event_1_CR.pdf", null]]], ["Financial Services Team Decision Making", "Economics", [["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1da2407cd78cbbbad5420_DECA_FTDM_2025_District_Event.pdf", "Economics"], ["2023 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd3b8beb0e4db75fe2d6d_DECA_FTDM_2023_District_Event_CR.pdf", "Economics"], ["2019 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399f0c35192790c495aa616_DECA_FTDM_2019_District_Event.pdf", "Economics"]]], ["Personal Financial Literacy", "Risk Assessment", [["2020 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399e977e220eed03a6d11d7_DECA_PFL_2020_District_Event.pdf", "Risk Assessment"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399ea14ca2be2713508e12f_DECA_PFL_2021_District_Event_Virtual.pdf", "Risk Assessment"], ["2022 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/6399ea6da1dff9d33d84dbb4_DECA_PFL_2022_District_Event.pdf", "Risk Assessment"]]]]}, {"id": "hospitality", "name": "Hospitality & Tourism", "tests": [["NoviDECA \u2013 Hospitality & Tourism Practice Tests", "https://novideca.weebly.com/hospitality-and-tourism-exam.html"], ["Hospitality \u2013 District Exam", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ee5b3ca1c1f9ba6535bf_Hospitality-District%20Exam.pdf"], ["HS Hospitality & Tourism Cluster Sample Exam", "https://teachdeca.org/wp-content/uploads/2020/06/HS_Hospitality_Tourism_Cluster_Sample_Exam_20.pdf"]], "roleplays": [["Principles of Hospitality & Tourism", "Communication Skills", [["2024 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dca85382f4a53d97fe8596_DECA_PHT_2024_District_Event.pdf", "Communication Skills"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a2b97c220ef64547d2731_DECA_PHT_2021_District_Event_Virtual.pdf", "Communication Skills"], ["2018 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a2a5e49a1f8071176c60a_DECA_PHT_2018_District_Event.pdf", "Communication Skills"], ["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ed6ba0f434243a419617_DECA_PHT_2026_District_Event.pdf", "Communication Skills"]]], ["Hospitality Services Team Decision Making", "Economics", [["2022 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639936ffeebc647fafc55db9_DECA_HTDM_2022_District_Event.pdf", "Economics"], ["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1da480945459ab0038c9a_DECA_HTDM_2025_District_Event.pdf", "Economics"], ["2026 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/69a1ee610f7e2623d87448fd_DECA_HTDM_2026_District_Event.pdf", "Economics"]]], ["Travel and Tourism Team Decision Making", "Promotion", [["2025 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1da80b24d9193ed3c2972_DECA_TTDM_2025_District_Event.pdf", "Promotion"], ["2023 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63fcd40744a33457912675f0_DECA_TTDM_2023_District_Event_CR.pdf", "Promotion"], ["2021 District Event (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/63994664e90c14f1d8d7f148_DECA_TTDM_2021_District_Event_Virtual.pdf", "Promotion"], ["2020 District Event", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639945e919fc9215cc97e3bf_DECA_TTDM_2020_District_Event.pdf", "Promotion"]]], ["Hotel and Lodging Management Series", "Scenario 1: Customer Relations \u00b7 Scenario 2: Selling", [["2024 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/65dcd77b77bfeab621ab2d5a_DECA_HLM_2024_District_Event_1.pdf", "Customer Relations"], ["2022 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a40982269b97eede0e4fd_DECA_HLM_2022_District_Event_1.pdf", "Customer Relations"], ["2020 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a3e9374caedae98be46e2_DECA_HLM_2020_Diistrict_Event_2.pdf", "Selling"], ["2017 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a3d13190d9c3bf5cce165_DECA_HLM_2017_District_Event_2.pdf", "Selling"], ["2017 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a3cd1160d0c3711cdf655_DECA_HLM_2017_District_Event_1.pdf", null]]], ["Quick Serve Restaurant Management Series", "Scenario 1: Selling \u00b7 Scenario 2: Product/Service Management", [["2021 District Event 2 (Virtual)", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a271033be25f12eb04463_DECA_QSRM_2021_District_Event_2_Virtual.pdf", "Selling"], ["2022 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a27a0bf7c607f87dff131_DECA_QSRM_2022_District_Event_2.pdf", "Product/Service Management"], ["2017 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a21d3fb26f0b6f3471dfd_DECA_QSRM_2017_District_Event_1.pdf", "Product/Service Management"], ["2022 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a2749c4b13a2bfd981016_DECA_QSRM_2022_District_Event_1.pdf", null]]], ["Restaurant and Food Service Management Series", "Scenario 1: Communications Skills \u00b7 Scenario 2: Product/Service Management", [["2025 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/67c1ddc50c5883aa5b4bcf22_DECA_RFSM_2025_District_Event_1.pdf", "Product/Service Management"], ["2022 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a1c1e7f9e3140b3508c6a_DECA_RFSM_2022_District_Event_1.pdf", null], ["2020 District Event 2", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a194e5ace5f76db3a5db7_DECA_RFSM_2020_District_Event_2.pdf", "Product/Service Management"], ["2018 District Event 1", "https://cdn.prod.website-files.com/635c470cc81318fc3e9c1e0e/639a13b97d217595527956e4_DECA_RFSM_2018_District_Event_1.pdf", "Communications Skills"]]]]}];
+const ICONS = {"home": "\ud83c\udfe0", "core": "\ud83d\udcd8", "marketing": "\ud83d\udce3", "bma": "\ud83d\udcbc", "entrepreneurship": "\ud83d\ude80", "finance": "\ud83d\udcb0", "hospitality": "\ud83c\udfe8"};
+const DESCRIPTIONS = {"core": "General business-administration knowledge that overlaps every cluster \u2014 a solid starting point whatever your event is, and required if your event is Business Administration Core.", "marketing": "Marketing Principles plus product- and retail-based events: Apparel & Accessories, Automotive Services, Business Services, Food Marketing, Marketing Communications, Retail Merchandising, Sports & Entertainment, and the Marketing/Buying team decision-making events.", "bma": "Business Management Principles, Human Resources Management, and the Business Law & Ethics team decision-making event.", "entrepreneurship": "Entrepreneurship Principles, the Entrepreneurship role-play series, and the Entrepreneurship team decision-making event.", "finance": "Finance Principles, Business Finance, Financial Services team decision-making, and Personal Financial Literacy.", "hospitality": "Hospitality & Tourism Principles, Hotel & Lodging Management, Quick Serve and Restaurant/Food Service Management, and the Hospitality/Travel & Tourism team decision-making events."};
+const SHORT = {"home": "Home", "core": "Core", "marketing": "Marketing", "bma": "Bus. Mgmt", "entrepreneurship": "Entre.", "finance": "Finance", "hospitality": "Hosp. & Tour."};
+
+const tabbar = document.getElementById('tabbar');
+const main = document.getElementById('main');
+const appbarSub = document.getElementById('appbar-sub');
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+// --- Home tab button (first) ---
+const homeBtn = document.createElement('button');
+homeBtn.setAttribute('role','tab');
+homeBtn.setAttribute('aria-selected','true');
+homeBtn.dataset.id = 'home';
+homeBtn.innerHTML = `<span class="ic">${ICONS.home}</span><span class="lbl">Home</span>`;
+homeBtn.addEventListener('click', ()=>selectCluster('home'));
+tabbar.appendChild(homeBtn);
+
+// --- Home panel ---
+const homePanel = document.createElement('section');
+homePanel.className = 'panel active';
+homePanel.id = 'panel-home';
+let hh = `
+  <div class="hero">
+    <p class="eyebrow">Needham DECA</p>
+    <h1>Find what your event needs, fast</h1>
+    <p>This hub collects practice tests and sample role-plays for every DECA career cluster, pulled straight from Needham DECA's competition prep packet. Tap a cluster below (or in the bar at the bottom) to jump to your event.</p>
+  </div>
+  <h2 class="section-label">How to use this</h2>
+  <div class="howto">
+    <div class="step"><span class="num">1</span><span class="txt">Find the <b>career cluster</b> your event belongs to (e.g. a Marketing Series role-play lives under Marketing, not Business Management).</span></div>
+    <div class="step"><span class="num">2</span><span class="txt"><b>Practice Tests &amp; Exam Resources</b> at the top of each tab are for the written exam — blueprints, sample exams, and quiz sites.</span></div>
+    <div class="step"><span class="num">3</span><span class="txt"><b>Sample Role-Plays</b> below that are past district events. The gold tag on each link is the exact instructional area it was written for — match it to what's listed for your event at districts.</span></div>
+  </div>
+  <h2 class="section-label">Browse by cluster</h2>
+  <div class="cluster-cards" id="cluster-cards"></div>
+`;
+homePanel.innerHTML = hh;
+main.appendChild(homePanel);
+
+const cardsWrap = homePanel.querySelector('#cluster-cards');
+DATA.forEach(c=>{
+  const card = document.createElement('button');
+  card.className = 'cluster-card';
+  card.innerHTML = `<span class="cc-emoji">${ICONS[c.id]||'📄'}</span><span class="cc-body"><p class="cc-title">${esc(c.name)}</p><p class="cc-desc">${esc(DESCRIPTIONS[c.id]||'')}</p></span><span class="cc-arrow">›</span>`;
+  card.addEventListener('click', ()=>selectCluster(c.id));
+  cardsWrap.appendChild(card);
+});
+
+// --- Cluster tabs + panels ---
+DATA.forEach((c,i)=>{
+  const btn = document.createElement('button');
+  btn.setAttribute('role','tab');
+  btn.setAttribute('aria-selected','false');
+  btn.dataset.id = c.id;
+  btn.innerHTML = `<span class="ic">${ICONS[c.id]||'📄'}</span><span class="lbl">${SHORT[c.id]||c.name}</span>`;
+  btn.addEventListener('click', ()=>selectCluster(c.id));
+  tabbar.appendChild(btn);
+
+  const panel = document.createElement('section');
+  panel.className = 'panel';
+  panel.id = 'panel-'+c.id;
+
+  let h = `<div class="cluster-head"><span class="emoji">${ICONS[c.id]||'📄'}</span><h1>${esc(c.name)}</h1></div>`;
+
+  h += '<h2 class="section-label">Practice Tests &amp; Exam Resources</h2><div class="test-grid">';
+  c.tests.forEach(([label,url])=>{
+    h += `<a class="test-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a>`;
+  });
+  h += '</div>';
+
+  if(c.roleplays.length){
+    h += '<h2 class="section-label">Sample Role-Plays</h2>';
+    h += `<div class="info-box"><b>What the tags mean:</b> the gold tag on a link is the exact district-level instructional area that role-play was built around — the same instructional area you'll see listed on your competitive event at districts. Where a series has two scenario versions, each is tagged with its own instructional area (both are listed below the event name); pick the download that matches the area you were assigned.</div>`;
+    c.roleplays.forEach(([title,areas,links])=>{
+      h += `<div class="rp-card"><h3 class="rp-title">${esc(title)}</h3><p class="rp-area">${esc(areas)}</p><ul class="rp-links">`;
+      links.forEach(([label,url,tag])=>{
+        h += `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}${tag?` <span class="tag">${esc(tag)}</span>`:''}</a></li>`;
+      });
+      h += '</ul></div>';
+    });
+  } else {
+    h += '<p class="empty-note">No cluster-specific role-plays listed — see exam resources above.</p>';
+  }
+
+  panel.innerHTML = h;
+  main.appendChild(panel);
+});
+
+function selectCluster(id){
+  document.querySelectorAll('nav.tabbar button').forEach(b=>b.setAttribute('aria-selected', b.dataset.id===id ? 'true':'false'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+id));
+  if(id === 'home'){
+    appbarSub.textContent = 'Resource Hub';
+  } else {
+    const c = DATA.find(c=>c.id===id);
+    appbarSub.textContent = c ? c.name : 'Resource Hub';
+  }
+  main.scrollTo(0,0);
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
